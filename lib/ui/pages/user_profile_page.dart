@@ -13,10 +13,10 @@ class UserProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text("Olá ${authService.getCurrentUserEmail()}"),
               ElevatedButton(
@@ -25,6 +25,8 @@ class UserProfile extends StatelessWidget {
               )
             ],
           ),
+          Icon(Icons.monitor_heart_outlined,
+              size: 90, color: Theme.of(context).colorScheme.primary),
           FormUserProfile(),
         ],
       ),

@@ -6,20 +6,12 @@ class UserProfileModel {
   final String? goals;
 
   UserProfileModel(
-      {
-      // required this.userEmail,
-      required this.weigth,
+      {required this.weigth,
       required this.height,
       required this.age,
       required this.goals});
 
   Map<String, dynamic> toMap() {
-    return {
-      // 'userEmail': userEmail,
-      'weigth': weigth,
-      'height': height,
-      'age': age,
-      'goals': goals
-    };
+    return {'weigth': weigth, 'height': height, 'age': age, 'goals': goals};
   }
 }
