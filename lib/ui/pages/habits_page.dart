@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:health_app/ui/widgets/form_habits.dart';
 
 class HabitsPage extends StatelessWidget {
   const HabitsPage({super.key});
@@ -6,11 +8,11 @@ class HabitsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text("Hábitos"),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [FormHabits()],
+        ),
       ),
     );
   }
