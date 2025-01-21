@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:health_app/ui/widgets/charts/graphics.dart';
 import 'package:health_app/ui/widgets/form_habits.dart';
 
 class HabitsPage extends StatelessWidget {
@@ -11,7 +12,7 @@ class HabitsPage extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [FormHabits()],
+          children: [const FormHabits()],
         ),
       ),
     );

@@ -29,7 +29,6 @@ class _FormHabitsState extends State<FormHabits> {
   }
 
   void sendHabit() async {
-    print("askamskamsak");
     if (_aguaController.text.isNotEmpty &&
         _exercicioController.text.isNotEmpty &&
         _exercicioTimeController.text.isNotEmpty &&
@@ -44,55 +43,47 @@ class _FormHabitsState extends State<FormHabits> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<DocumentSnapshot>(
-        stream: firestoreService.getUserProfile(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data!.exists) {
-            final habitDatas = snapshot.data!.data() as Map<String, dynamic>;
-          }
-
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                CustomTextFormField(
-                    labelText: "Exercício",
-                    controller: _exercicioController,
-                    keyboardType: TextInputType.text),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomTextFormField(
-                    labelText: "Tempo de exercício",
-                    controller: _exercicioTimeController,
-                    keyboardType: TextInputType.number),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomTextFormField(
-                  labelText: "Ml de água",
-                  controller: _aguaController,
-                  keyboardType: TextInputType.number,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomTextFormField(
-                  labelText: "Duração do sono",
-                  controller: _sleepDurationController,
-                  keyboardType: TextInputType.number,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomButton(
-                  height: 70,
-                  text: "Enviar hábito diário",
-                  onClick: sendHabit,
-                )
-              ],
-            ),
-          );
-        });
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          CustomTextFormField(
+              labelText: "Exercício",
+              controller: _exercicioController,
+              keyboardType: TextInputType.text),
+          const SizedBox(
+            height: 10,
+          ),
+          CustomTextFormField(
+              labelText: "Tempo de exercício",
+              controller: _exercicioTimeController,
+              keyboardType: TextInputType.number),
+          const SizedBox(
+            height: 10,
+          ),
+          CustomTextFormField(
+            labelText: "Ml de água",
+            controller: _aguaController,
+            keyboardType: TextInputType.number,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          CustomTextFormField(
+            labelText: "Duração do sono",
+            controller: _sleepDurationController,
+            keyboardType: TextInputType.number,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          CustomButton(
+            height: 70,
+            text: "Enviar hábito diário",
+            onClick: sendHabit,
+          )
+        ],
+      ),
+    );
   }
 }

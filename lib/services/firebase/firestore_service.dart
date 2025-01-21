@@ -36,7 +36,36 @@ class CloudFiretoreService {
       'sleep': habits.sleepDuration,
       'water': habits.waterQtd,
       'timestamp': timestamp,
-    }); // merge: true mantém dados existentes
+    });
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getHabits() {
+    final String senderId = _firebaseAuth.currentUser!.uid;
+
+    return usersRef
+        .doc(senderId)
+        .collection("habits_user")
+        .orderBy('timestamp',
+            descending:
+                false) // Ordena os hábitos pela data (mais antigos primeiro)
+        .snapshots();
+  }
+
+  Stream<List<Map<String, dynamic>>> getHabitData() async* {
+    final String senderId = _firebaseAuth.currentUser!.uid;
+
+    final snapshots = usersRef
+        .doc(senderId)
+        .collection("habits_user")
+        .orderBy('timestamp', descending: false)
+        .snapshots();
+
+    await for (final snapshot in snapshots) {
+      final data = snapshot.docs
+          .map((doc) => doc.data()) // Obtém os dados de cada documento
+          .toList();
+      yield data;
+    }
   }
 
   Stream<DocumentSnapshot> getUserProfile() {
