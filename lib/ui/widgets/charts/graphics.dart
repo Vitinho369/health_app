@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:health_app/services/firebase/firestore_service.dart';
 import 'package:health_app/ui/widgets/charts/habits_chart.dart';
@@ -23,8 +22,8 @@ class _GraphicsState extends State<Graphics> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: firestoreService.getHabits(),
+    return StreamBuilder<List<Map<String, dynamic>>>(
+      stream: firestoreService.getHabitData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -34,17 +33,15 @@ class _GraphicsState extends State<Graphics> {
           return const Center(child: Text("Erro ao carregar dados."));
         }
 
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Center(child: Text("Nenhum hábito encontrado."));
         }
 
         final habits = snapshot.data!;
 
-        print(habits);
-
         return Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Text("data"),
+          child: HabitsChart(habits: habits),
         );
       },
     );

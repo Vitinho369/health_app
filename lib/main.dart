@@ -9,7 +9,6 @@ import 'package:health_app/ui/pages/register_page.dart';
 import 'package:health_app/ui/widgets/auth_checker.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
