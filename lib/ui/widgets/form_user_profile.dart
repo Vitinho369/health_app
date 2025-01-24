@@ -43,6 +43,8 @@ class _FormUserProfileState extends State<FormUserProfile> {
           height: double.parse(_alturaController.text),
           age: int.parse(_idadeController.text),
           goals: _metaController.text);
+
+      firestoreService.addUserProfile(userProfileModel);
     }
   }
 

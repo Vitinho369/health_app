@@ -6,14 +6,12 @@ import 'package:health_app/model/profile.dart';
 class CloudFiretoreService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
-  final usersRef = FirebaseFirestore.instance.collection('users_profiles');
-  final habitsRef = FirebaseFirestore.instance.collection('habits_user');
 
   Future<void> addUserProfile(UserProfileModel userProfileModel) async {
     final String senderId = _firebaseAuth.currentUser!.uid;
     final Timestamp timestamp = Timestamp.now();
 
-    await usersRef.doc(senderId).set({
+    await _firebaseFirestore.collection("users_profiles").doc(senderId).set({
       'weigth': userProfileModel.weigth,
       'height': userProfileModel.height,
       'age': userProfileModel.age,
@@ -30,7 +28,12 @@ class CloudFiretoreService {
     final year = DateTime.now().year;
     final String habitId = '$day-$month-$year';
 
-    await usersRef.doc(senderId).collection("habits_user").doc(habitId).set({
+    await _firebaseFirestore
+        .collection("users_profiles")
+        .doc(senderId)
+        .collection("habits_user")
+        .doc(habitId)
+        .set({
       'exercise': habits.exercise,
       'timeExercise': habits.timeExercise,
       'sleep': habits.sleepDuration,
@@ -42,7 +45,8 @@ class CloudFiretoreService {
   Stream<QuerySnapshot<Map<String, dynamic>>> getHabits() {
     final String senderId = _firebaseAuth.currentUser!.uid;
 
-    return usersRef
+    return _firebaseFirestore
+        .collection("users_profiles")
         .doc(senderId)
         .collection("habits_user")
         .orderBy('timestamp',
@@ -54,7 +58,8 @@ class CloudFiretoreService {
   Stream<List<Map<String, dynamic>>> getHabitData() async* {
     final String senderId = _firebaseAuth.currentUser!.uid;
 
-    final snapshots = usersRef
+    final snapshots = _firebaseFirestore
+        .collection("users_profiles")
         .doc(senderId)
         .collection("habits_user")
         .orderBy('timestamp', descending: false)
@@ -70,6 +75,9 @@ class CloudFiretoreService {
 
   Stream<DocumentSnapshot> getUserProfile() {
     final String senderId = _firebaseAuth.currentUser!.uid;
-    return usersRef.doc(senderId).snapshots();
+    return _firebaseFirestore
+        .collection("users_profiles")
+        .doc(senderId)
+        .snapshots();
   }
 }

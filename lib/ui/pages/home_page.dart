@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/services/firebase/auth_service.dart';
 import 'package:health_app/services/app/navigation_bar_service.dart';
+import 'package:health_app/services/firebase/firestore_service.dart';
 import 'package:health_app/ui/pages/goals_page.dart';
+import 'package:health_app/ui/pages/google_fit_page.dart';
+import 'package:health_app/ui/pages/graphics_page.dart';
 import 'package:health_app/ui/pages/habits_page.dart';
 import 'package:health_app/ui/pages/user_profile_page.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +15,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context, listen: false);
+    final fireStorageService = Provider.of<CloudFiretoreService>(context);
     final navigationService = Provider.of<NavigationBarService>(context);
     return Scaffold(
       bottomNavigationBar: NavigationBar(
@@ -30,13 +34,20 @@ class HomePage extends StatelessWidget {
             icon: Icon(Icons.person),
             label: 'Perfil',
           ),
+          NavigationDestination(
+            icon: Icon(Icons.assessment),
+            label: 'Progresso',
+          ),
         ],
       ),
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       body: <Widget>[
         const GoalsPage(),
         const HabitsPage(),
-        UserProfile(authService: authService),
+        GraphicsPage(
+            authService: authService, firestoreService: fireStorageService),
+        // UserProfile(authService: authService),
+        GoogleFitPage(),
       ][navigationService.selectedIndex],
     );
   }
