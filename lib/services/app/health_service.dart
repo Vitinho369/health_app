@@ -26,13 +26,12 @@ enum AppState {
 
 class HealthService extends ChangeNotifier {
   final health = Health();
-  int totalSteps = 0;
 
-  bool healthConnectionInstall = false;
   late final String _contentHealthConnectStatus;
 
   List<HealthDataPoint> _healthDataList = [];
   AppState _state = AppState.DATA_NOT_FETCHED;
+  bool dataFecthed = false;
   int _nofSteps = 0;
   List<RecordingMethod> recordingMethodsToFilter = [];
 
@@ -69,7 +68,6 @@ class HealthService extends ChangeNotifier {
   /// Install Google Health Connect on this phone.
   Future<void> installHealthConnect() async {
     await health.installHealthConnect();
-    healthConnectionInstall = true;
     notifyListeners();
   }
 
@@ -180,19 +178,19 @@ class HealthService extends ChangeNotifier {
         steps = await health.getTotalStepsInInterval(midnight, now,
             includeManualEntry:
                 !recordingMethodsToFilter.contains(RecordingMethod.manual));
-
-        totalSteps += steps!;
       } catch (error) {
         debugPrint("Exception in getTotalStepsInInterval: $error");
       }
 
       debugPrint('Total number of steps: $steps');
       _nofSteps = (steps == null) ? 0 : steps;
+      dataFecthed = true;
       _state = (steps == null) ? AppState.NO_DATA : AppState.STEPS_READY;
       notifyListeners();
     } else {
       debugPrint("Authorization not granted - error in authorization");
       _state = AppState.DATA_NOT_FETCHED;
+      dataFecthed = false;
     }
   }
 }

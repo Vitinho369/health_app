@@ -1,5 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-          <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+package="ufrn.br.health_app">
     
      <!-- Check whether Health Connect is installed or not -->  
      <queries>
@@ -17,8 +17,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
  
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <!-- Permissions for new android API (Health Connect) -->
     <uses-permission android:name="android.permission.health.READ_STEPS"/>
     <uses-permission android:name="android.permission.health.WRITE_STEPS"/>

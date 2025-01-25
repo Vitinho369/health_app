@@ -1,4 +1,5 @@
 import 'package:health_app/services/app/health_service.dart';
+import 'package:health_app/services/app/shared_preferences_service.dart';
 import 'package:health_app/services/firebase/auth_service.dart';
 import 'package:health_app/services/app/navigation_bar_service.dart';
 import 'package:health_app/services/firebase/firestore_service.dart';
@@ -15,6 +16,8 @@ class ConfigureProviders {
     final navigationService = NavigationBarService();
     final cloudFiretoreService = CloudFiretoreService();
     final healthService = HealthService();
+    final SharedPreferencesService preferencesService =
+        SharedPreferencesService();
 
     return ConfigureProviders(providers: [
       ChangeNotifierProvider<AuthService>.value(value: authService),
@@ -22,6 +25,8 @@ class ConfigureProviders {
           value: navigationService),
       Provider<CloudFiretoreService>.value(value: cloudFiretoreService),
       ChangeNotifierProvider<HealthService>.value(value: healthService),
+      ChangeNotifierProvider<SharedPreferencesService>.value(
+          value: preferencesService),
     ]);
   }
 }
