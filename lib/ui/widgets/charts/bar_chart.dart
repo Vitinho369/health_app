@@ -6,14 +6,16 @@ class HabitsBarChart extends StatelessWidget {
   final String xLabelKey;
   final String yLabelKey;
   final List<Map<String, dynamic>> habits;
+  final double interval;
 
-  const HabitsBarChart({
-    Key? key,
-    required this.chartTitle,
-    required this.xLabelKey,
-    required this.yLabelKey,
-    required this.habits,
-  }) : super(key: key);
+  const HabitsBarChart(
+      {Key? key,
+      required this.chartTitle,
+      required this.xLabelKey,
+      required this.yLabelKey,
+      required this.habits,
+      required this.interval})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +61,7 @@ class HabitsBarChart extends StatelessWidget {
                   sideTitles: SideTitles(
                     showTitles: true,
                     reservedSize: 40,
-                    interval: maxY /
-                        5, // Ajuste o intervalo para os valores do eixo Y
+                    interval: interval,
                     getTitlesWidget: (value, meta) {
                       return Text(
                         "${value.toInt()}",

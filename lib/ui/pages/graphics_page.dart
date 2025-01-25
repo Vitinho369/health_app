@@ -45,7 +45,13 @@ class GraphicsPage extends StatelessWidget {
                   habits: habits,
                   intervalValues: 100,
                 ),
-                // HabitsBarChart(chartTitle: "Duração do ",),
+                HabitsBarChart(
+                  chartTitle: "Duração do Sono",
+                  yLabelKey: "timeExercise",
+                  xLabelKey: "exercise",
+                  habits: habits,
+                  interval: 20,
+                ),
                 HabitsLineChart(
                   chartTitle: "Duração do Sono",
                   xLabelKey: 'timestamp',

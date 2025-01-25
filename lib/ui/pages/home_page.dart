@@ -6,7 +6,6 @@ import 'package:health_app/ui/pages/goals_page.dart';
 import 'package:health_app/ui/pages/google_fit_page.dart';
 import 'package:health_app/ui/pages/graphics_page.dart';
 import 'package:health_app/ui/pages/habits_page.dart';
-import 'package:health_app/ui/pages/user_profile_page.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {

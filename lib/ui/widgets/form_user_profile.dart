@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:health_app/model/habits.dart';
 import 'package:health_app/model/profile.dart';
 import 'package:health_app/services/firebase/firestore_service.dart';
-import 'package:health_app/ui/pages/user_profile_page.dart';
 import 'package:health_app/ui/widgets/custom_button.dart';
 import 'package:health_app/ui/widgets/custom_text_form_field.dart';
 import 'package:provider/provider.dart';
