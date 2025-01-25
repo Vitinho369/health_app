@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:health_app/model/data_sensor.dart';
 import 'package:health_app/services/app/util_health.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
@@ -28,6 +29,8 @@ class HealthService extends ChangeNotifier {
   final health = Health();
 
   late final String _contentHealthConnectStatus;
+  Map<HealthDataType, double> totalValues = {};
+  DataSensor dataSensor = DataSensor();
 
   List<HealthDataPoint> _healthDataList = [];
   AppState _state = AppState.DATA_NOT_FETCHED;
@@ -120,6 +123,7 @@ class HealthService extends ChangeNotifier {
     // get data within the last 24 hours
     final now = DateTime.now();
     final yesterday = now.subtract(const Duration(hours: 24));
+    final midnight = DateTime(now.year, now.month, now.day);
 
     // Clear old data points
     _healthDataList.clear();
@@ -153,6 +157,39 @@ class HealthService extends ChangeNotifier {
     //   debugPrint(toJsonString(data));
     // }
 
+    // Process each data point
+    for (var data in _healthDataList) {
+      String type = data.value.$type.toString();
+
+      if (type.contains("NumericHealthValue")) {
+        String valueText = data.value.toString().split(":")[1];
+        double value = double.parse(valueText);
+
+        if (totalValues.containsKey(data.type)) {
+          totalValues[data.type] = totalValues[data.type]! + value;
+        } else {
+          totalValues[data.type] = value;
+        }
+      }
+    }
+
+    print("Valores totais: ${totalValues}");
+    totalValues.forEach((key, value) {
+      print(key.toString());
+      if (key.toString() != "HealthDataType.STEPS") {
+        dataSensor.data_sensor[key.toString()]!["value"] = value.toInt() / 1000;
+      } else {
+        dataSensor.data_sensor[key.toString()]!["value"] = value.toInt();
+      }
+    });
+
+    // print("Valores totais: ${dataSensor.data_sensor}");
+    print("valores diferentes de 0:");
+    for (var data in dataSensor.data_sensor.entries) {
+      if (data.value["value"] != 0) {
+        print(data);
+      }
+    }
     // update the UI to display the results
     _state = _healthDataList.isEmpty ? AppState.NO_DATA : AppState.DATA_READY;
     notifyListeners();

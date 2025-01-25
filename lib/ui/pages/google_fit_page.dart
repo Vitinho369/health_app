@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:health_app/services/app/health_service.dart';
 import 'package:health_app/services/app/shared_preferences_service.dart';
+import 'package:health_app/ui/widgets/data_fit_box.dart';
 import 'package:provider/provider.dart';
 
 class GoogleFitPage extends StatefulWidget {
@@ -13,7 +14,6 @@ class GoogleFitPage extends StatefulWidget {
 class _GoogleFitPageState extends State<GoogleFitPage> {
   late HealthService healthService;
   late SharedPreferencesService sharedPreferencesService;
-  bool _isDataFetched = false;
 
   @override
   void initState() {
@@ -40,40 +40,64 @@ class _GoogleFitPageState extends State<GoogleFitPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Google Fit Integration'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            if (!sharedPreferencesService.isGoogleHealthInstall())
-              ElevatedButton(
-                onPressed: () async {
-                  await healthService.installHealthConnect();
-                  await healthService.authorize();
-                  sharedPreferencesService.setGoogleHealthInstall(true);
-                },
-                child: const Text('Conectar ao Google Fit'),
-              ),
-            if (sharedPreferencesService.isGoogleHealthInstall() &&
-                !healthService.dataFecthed)
-              const CircularProgressIndicator(),
-            if (healthService.dataFecthed &&
-                sharedPreferencesService.isGoogleHealthInstall())
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Text(
-                  'Total de passos diário: ${healthService.nofSteps}',
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
+    return sharedPreferencesService.isGoogleHealthInstall()
+        ? healthService.dataFecthed
+            ? Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    // Título antes do ListView
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 16.0),
+                      child: Text(
+                        'Dados Google Fit',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(8.0),
+                        itemCount:
+                            healthService.dataSensor.data_sensor.entries.length,
+                        itemBuilder: (context, index) {
+                          final listData = healthService
+                              .dataSensor.data_sensor.entries
+                              .toList();
+                          final data = listData[index].value;
+
+                          if (data["value"] == 0)
+                            return const SizedBox.shrink();
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: DataFitBox(
+                              title: data["name"],
+                              value: data["value"].toString(),
+                              icon: Icon(
+                                data["icon"],
+                                size: 40,
+                              ),
+                              unit: data["unit"],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-          ],
-        ),
-      ),
-    );
+              )
+            : const Center(child: CircularProgressIndicator())
+        : Center(
+            child: ElevatedButton(
+              onPressed: () async {
+                await healthService.installHealthConnect();
+                await healthService.authorize();
+                sharedPreferencesService.setGoogleHealthInstall(true);
+              },
+              child: const Text('Conectar ao Google Fit'),
+            ),
+          );
   }
 }

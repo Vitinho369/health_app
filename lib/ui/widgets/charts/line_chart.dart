@@ -3,69 +3,88 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class HabitsLineChart extends StatelessWidget {
+  final String chartTitle;
+  final String xLabelKey;
+  final String yLabelKey;
   final List<Map<String, dynamic>> habits;
+  final double intervalValues;
 
-  const HabitsLineChart({Key? key, required this.habits}) : super(key: key);
+  const HabitsLineChart(
+      {Key? key,
+      required this.chartTitle,
+      required this.xLabelKey,
+      required this.yLabelKey,
+      required this.habits,
+      required this.intervalValues})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Ordenar os dados pelo timestamp
-    habits.sort((a, b) => (a['timestamp'] as Timestamp)
+    // Ordena os dados com base no timestamp
+    habits.sort((a, b) => (a[xLabelKey] as Timestamp)
         .millisecondsSinceEpoch
-        .compareTo((b['timestamp'] as Timestamp).millisecondsSinceEpoch));
+        .compareTo((b[xLabelKey] as Timestamp).millisecondsSinceEpoch));
 
-    // Mapeia os dados para pontos no gráfico
+    // Pega os timestamps e converte para valores de double para o gráfico
     final timestamps = habits
         .map((habit) =>
-            (habit['timestamp'] as Timestamp).millisecondsSinceEpoch.toDouble())
+            (habit[xLabelKey] as Timestamp).millisecondsSinceEpoch.toDouble())
         .toList();
 
     final minX = timestamps.reduce((a, b) => a < b ? a : b); // Menor timestamp
     final maxX = timestamps.reduce((a, b) => a > b ? a : b); // Maior timestamp
 
+    final minY = habits
+        .map((habit) =>
+            habit[yLabelKey] != null ? habit[yLabelKey].toDouble() : 0.0)
+        .reduce((a, b) => a < b ? a : b); // Menor valor de Y
+    final maxY = habits
+        .map((habit) =>
+            habit[yLabelKey] != null ? habit[yLabelKey].toDouble() : 0.0)
+        .reduce((a, b) => a > b ? a : b); // Maior valor de Y
+
     final lineData = habits.map((habit) {
-      final timestamp = habit['timestamp'] as Timestamp;
+      final timestamp = habit[xLabelKey] as Timestamp;
       final date = timestamp.millisecondsSinceEpoch.toDouble();
+      final yValue =
+          habit[yLabelKey] != null ? habit[yLabelKey].toDouble() : 0.0;
 
-      final waterQtd = habit['water'] ?? 0;
-
-      return FlSpot(date, waterQtd.toDouble());
+      return FlSpot(date, yValue); // Certificando-se que ambos são doubles
     }).toList();
 
-    // Determinar os pontos do eixo X (5 rótulos no total)
     final step = (maxX - minX) /
-        (habits.length - 1); // Divisão exata em 5 partes (4 intervalos)
-    final xAxisValues = List.generate(
-      habits.length,
-      (index) => minX + (index * step),
-    );
+        (habits.length - 1); // Calcular o passo com base no número de pontos
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text("Quantidade de água por hábito"),
+        Text(chartTitle),
         SizedBox(
           height: 200,
           width: 300,
           child: LineChart(
             LineChartData(
-              gridData: FlGridData(show: true),
+              gridData: const FlGridData(show: true),
               titlesData: FlTitlesData(
                 topTitles:
                     const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 rightTitles:
                     const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                leftTitles: const AxisTitles(
-                    sideTitles: SideTitles(
-                        showTitles: true, reservedSize: 40, interval: 100)),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 40,
+                    interval:
+                        intervalValues, // Manter o intervalo de valores no eixo Y
+                  ),
+                ),
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
-                    interval: step, // Mostra apenas os valores correspondentes
+                    interval:
+                        step, // Definir intervalo de acordo com o número de pontos
                     getTitlesWidget: (value, meta) {
-                      if (!xAxisValues.contains(value))
-                        return const SizedBox.shrink();
                       final timestamp =
                           Timestamp.fromMillisecondsSinceEpoch(value.toInt());
                       final date = timestamp.toDate();
@@ -80,15 +99,16 @@ class HabitsLineChart extends StatelessWidget {
               borderData: FlBorderData(show: true),
               lineBarsData: [
                 LineChartBarData(
-                  spots: lineData, // Define os pontos do gráfico de linha
-                  isCurved: false, // Faz a linha ser curva
-                  color: Colors.blue, // Cor da linha
-                  dotData:
-                      FlDotData(show: true), // Não exibe pontos nas interseções
+                  spots: lineData,
+                  isCurved: false,
+                  color: Colors.blue,
+                  dotData: const FlDotData(show: true),
                 ),
               ],
               minX: minX,
               maxX: maxX,
+              minY: minY,
+              maxY: maxY,
             ),
           ),
         ),

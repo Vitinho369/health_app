@@ -2,32 +2,39 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class HabitsBarChart extends StatelessWidget {
+  final String chartTitle;
+  final String xLabelKey;
+  final String yLabelKey;
   final List<Map<String, dynamic>> habits;
 
-  const HabitsBarChart({Key? key, required this.habits}) : super(key: key);
+  const HabitsBarChart({
+    Key? key,
+    required this.chartTitle,
+    required this.xLabelKey,
+    required this.yLabelKey,
+    required this.habits,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Calcular o valor máximo de horas de exercício
-    final maxTime = habits.fold<double>(
+    // Calcular o valor máximo do eixo Y
+    final maxY = habits.fold<double>(
       0,
-      (prev, habit) => (habit['timeExercise'] ?? 0.0) > prev
-          ? habit['timeExercise'].toDouble()
-          : prev,
+      (prev, item) =>
+          (item[yLabelKey] ?? 0.0) > prev ? item[yLabelKey].toDouble() : prev,
     );
 
     // Mapeia os dados para o gráfico
     final barData = habits.asMap().entries.map((entry) {
       final index = entry.key;
-      final habit = entry.value;
-      final timeExercise = (habit['timeExercise'] ?? 0).toDouble();
+      final item = entry.value;
+      final yValue = (item[yLabelKey] ?? 0).toDouble();
 
       return BarChartGroupData(
-        x: index, // Índice do exercício usado como posição no eixo X
+        x: index, // Índice do item usado como posição no eixo X
         barRods: [
           BarChartRodData(
-            toY:
-                timeExercise.toDouble(), // Valor no eixo Y (horas de exercício)
+            toY: yValue, // Valor no eixo Y
             color: Colors.blue, // Cor das barras
             width: 20, // Largura da barra
             borderRadius: BorderRadius.circular(4), // Bordas arredondadas
@@ -38,15 +45,13 @@ class HabitsBarChart extends StatelessWidget {
 
     return Column(
       children: [
-        Text("Horas de exercício por hábito"),
+        Text(chartTitle),
         SizedBox(
           height: 200,
           width: 300,
           child: BarChart(
             BarChartData(
-              maxY: maxTime > 0
-                  ? maxTime + 1
-                  : 1, // Ajusta o valor máximo no eixo Y
+              maxY: maxY > 0 ? maxY + 1 : 1, // Ajusta o valor máximo no eixo Y
               barGroups: barData,
               gridData: FlGridData(show: true), // Exibe as linhas de grade
               titlesData: FlTitlesData(
@@ -54,11 +59,11 @@ class HabitsBarChart extends StatelessWidget {
                   sideTitles: SideTitles(
                     showTitles: true,
                     reservedSize: 40,
-                    interval: 10,
+                    interval: maxY /
+                        5, // Ajuste o intervalo para os valores do eixo Y
                     getTitlesWidget: (value, meta) {
-                      print(value);
                       return Text(
-                        "${value}h", // Exibe as horas no eixo Y
+                        "${value.toInt()}",
                         style: const TextStyle(fontSize: 12),
                       );
                     },
@@ -70,12 +75,11 @@ class HabitsBarChart extends StatelessWidget {
                     reservedSize: 40,
                     getTitlesWidget: (value, meta) {
                       if (value.toDouble() < habits.length) {
-                        final exercise =
-                            habits[value.toInt()]['exercise'] ?? '';
+                        final label = habits[value.toInt()][xLabelKey] ?? '';
                         return Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
-                            exercise,
+                            label,
                             style: const TextStyle(fontSize: 12),
                           ),
                         );

@@ -27,7 +27,6 @@ class CloudFiretoreService {
     final month = DateTime.now().month;
     final year = DateTime.now().year;
     final String habitId = '$day-$month-$year';
-
     await _firebaseFirestore
         .collection("users_profiles")
         .doc(senderId)
@@ -49,9 +48,7 @@ class CloudFiretoreService {
         .collection("users_profiles")
         .doc(senderId)
         .collection("habits_user")
-        .orderBy('timestamp',
-            descending:
-                false) // Ordena os hábitos pela data (mais antigos primeiro)
+        .orderBy('timestamp', descending: false)
         .snapshots();
   }
 

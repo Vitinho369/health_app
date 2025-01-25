@@ -9,7 +9,6 @@ class GraphicsPage extends StatelessWidget {
       {super.key, required this.authService, required this.firestoreService});
 
   final CloudFiretoreService firestoreService;
-
   final AuthService authService;
 
   @override
@@ -32,26 +31,28 @@ class GraphicsPage extends StatelessWidget {
         final habits = snapshot.data!;
 
         return SingleChildScrollView(
-          //alinhar os widgets no meio
-
           child: Align(
             alignment: Alignment.center,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text("Olá ${authService.getCurrentUserEmail()}"),
-                    ElevatedButton(
-                      onPressed: () => {authService.signOut()},
-                      child: Icon(Icons.logout_rounded),
-                    )
-                  ],
+                // Passando parâmetros genéricos para o gráfico
+                HabitsLineChart(
+                  chartTitle: "Quantidade de água por dia",
+                  xLabelKey: 'timestamp',
+                  yLabelKey: 'water',
+                  habits: habits,
+                  intervalValues: 100,
                 ),
-                HabitsLineChart(habits: habits),
-                HabitsBarChart(habits: habits),
+                // HabitsBarChart(chartTitle: "Duração do ",),
+                HabitsLineChart(
+                  chartTitle: "Duração do Sono",
+                  xLabelKey: 'timestamp',
+                  yLabelKey: 'sleep',
+                  habits: habits,
+                  intervalValues: 5,
+                ),
               ],
             ),
           ),

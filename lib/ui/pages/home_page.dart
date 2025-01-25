@@ -18,6 +18,16 @@ class HomePage extends StatelessWidget {
     final fireStorageService = Provider.of<CloudFiretoreService>(context);
     final navigationService = Provider.of<NavigationBarService>(context);
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Health App'),
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () => authService.signOut(),
+          ),
+        ],
+      ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (value) => navigationService.updateIndex(value),
         selectedIndex: navigationService.selectedIndex,
@@ -27,25 +37,25 @@ class HomePage extends StatelessWidget {
             label: 'Metas',
           ),
           NavigationDestination(
+            icon: Icon(Icons.assessment),
+            label: 'Progresso',
+          ),
+          NavigationDestination(
             icon: Icon(Icons.health_and_safety),
             label: 'Hábitos',
           ),
           NavigationDestination(
-            icon: Icon(Icons.person),
-            label: 'Perfil',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.assessment),
-            label: 'Progresso',
+            icon: Icon(Icons.fitness_center),
+            label: 'Google Fit',
           ),
         ],
       ),
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       body: <Widget>[
         const GoalsPage(),
-        const HabitsPage(),
         GraphicsPage(
             authService: authService, firestoreService: fireStorageService),
+        const HabitsPage(),
         // UserProfile(authService: authService),
         GoogleFitPage(),
       ][navigationService.selectedIndex],
