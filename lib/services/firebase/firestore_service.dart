@@ -41,6 +41,27 @@ class CloudFiretoreService {
     });
   }
 
+  Future<void> addGoal(Habits habits) async {
+    final String senderId = _firebaseAuth.currentUser!.uid;
+    final Timestamp timestamp = Timestamp.now();
+    final day = DateTime.now().day;
+    final month = DateTime.now().month;
+    final year = DateTime.now().year;
+    final String habitId = '$day-$month-$year';
+    await _firebaseFirestore
+        .collection("users_profiles")
+        .doc(senderId)
+        .collection("habits_user")
+        .doc(habitId)
+        .set({
+      'exercise': habits.exercise,
+      'timeExercise': habits.timeExercise,
+      'sleep': habits.sleepDuration,
+      'water': habits.waterQtd,
+      'timestamp': timestamp,
+    });
+  }
+
   Stream<QuerySnapshot<Map<String, dynamic>>> getHabits() {
     final String senderId = _firebaseAuth.currentUser!.uid;
 

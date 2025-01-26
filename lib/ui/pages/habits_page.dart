@@ -10,11 +10,10 @@ class HabitsPage extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             SizedBox(height: 60),
             FormHabits(),
-            SizedBox(height: 20), // Espaçamento entre os widgets
-            // Graphics(),
+            SizedBox(height: 20),
           ],
         ),
       ),

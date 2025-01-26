@@ -119,7 +119,6 @@ class HealthService extends ChangeNotifier {
   /// Fetch data points from the health plugin and show them in the app.
   Future<void> fetchData() async {
     _state = AppState.FETCHING_DATA;
-
     // get data within the last 24 hours
     final now = DateTime.now();
     final yesterday = now.subtract(const Duration(hours: 24));
@@ -132,7 +131,7 @@ class HealthService extends ChangeNotifier {
       // fetch health data
       List<HealthDataPoint> healthData = await health.getHealthDataFromTypes(
         types: types,
-        startTime: yesterday,
+        startTime: midnight,
         endTime: now,
         recordingMethodsToFilter: recordingMethodsToFilter,
       );
@@ -148,51 +147,48 @@ class HealthService extends ChangeNotifier {
           (healthData.length < 100) ? healthData : healthData.sublist(0, 100));
     } catch (error) {
       debugPrint("Exception in getHealthDataFromTypes: $error");
+      dataFecthed = false;
     }
 
     // filter out duplicates
     _healthDataList = health.removeDuplicates(_healthDataList);
-
     // for (var data in _healthDataList) {
     //   debugPrint(toJsonString(data));
     // }
 
     // Process each data point
+    totalValues.clear();
     for (var data in _healthDataList) {
       String type = data.value.$type.toString();
 
       if (type.contains("NumericHealthValue")) {
         String valueText = data.value.toString().split(":")[1];
         double value = double.parse(valueText);
-
+        print("valor do sensor ${data.type}, ${value}");
         if (totalValues.containsKey(data.type)) {
           totalValues[data.type] = totalValues[data.type]! + value;
         } else {
           totalValues[data.type] = value;
+          print("valor da sessão de sono ${data.type}, ${value}");
         }
       }
     }
 
-    print("Valores totais: ${totalValues}");
     totalValues.forEach((key, value) {
-      print(key.toString());
-      if (key.toString() != "HealthDataType.STEPS") {
+      if (key.toString() != "HealthDataType.STEPS" &&
+          key.toString() != "HealthDataType.SLEEP_SESSION") {
         dataSensor.data_sensor[key.toString()]!["value"] = value.toInt() / 1000;
+      } else if (key.toString() == "HealthDataType.SLEEP_SESSION") {
+        dataSensor.data_sensor[key.toString()]!["value"] = value.toInt() / 60;
       } else {
         dataSensor.data_sensor[key.toString()]!["value"] = value.toInt();
       }
     });
 
-    // print("Valores totais: ${dataSensor.data_sensor}");
-    print("valores diferentes de 0:");
-    for (var data in dataSensor.data_sensor.entries) {
-      if (data.value["value"] != 0) {
-        print(data);
-      }
-    }
     // update the UI to display the results
     _state = _healthDataList.isEmpty ? AppState.NO_DATA : AppState.DATA_READY;
-    notifyListeners();
+    dataFecthed = true;
+    notifyListeners(); // Notifica os listeners (UI)
   }
 
   /// Fetch steps from the health plugin and show them in the app.

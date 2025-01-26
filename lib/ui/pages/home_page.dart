@@ -44,7 +44,7 @@ class HomePage extends StatelessWidget {
             label: 'Hábitos',
           ),
           NavigationDestination(
-            icon: Icon(Icons.fitness_center),
+            icon: Icon(Icons.favorite),
             label: 'Google Fit',
           ),
         ],

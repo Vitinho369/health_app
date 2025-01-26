@@ -20,24 +20,17 @@ class HabitsLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Ordena os dados com base no timestamp
     habits.sort((a, b) => (a[xLabelKey] as Timestamp)
         .millisecondsSinceEpoch
         .compareTo((b[xLabelKey] as Timestamp).millisecondsSinceEpoch));
 
-    // Pega os timestamps e converte para valores de double para o gráfico
     final timestamps = habits
         .map((habit) =>
             (habit[xLabelKey] as Timestamp).millisecondsSinceEpoch.toDouble())
         .toList();
 
-    final minX = timestamps.reduce((a, b) => a < b ? a : b); // Menor timestamp
-    final maxX = timestamps.reduce((a, b) => a > b ? a : b); // Maior timestamp
-
-    final minY = habits
-        .map((habit) =>
-            habit[yLabelKey] != null ? habit[yLabelKey].toDouble() : 0.0)
-        .reduce((a, b) => a < b ? a : b); // Menor valor de Y
+    final minX = timestamps.reduce((a, b) => a < b ? a : b);
+    final maxX = timestamps.reduce((a, b) => a > b ? a : b);
     final maxY = habits
         .map((habit) =>
             habit[yLabelKey] != null ? habit[yLabelKey].toDouble() : 0.0)
@@ -49,11 +42,10 @@ class HabitsLineChart extends StatelessWidget {
       final yValue =
           habit[yLabelKey] != null ? habit[yLabelKey].toDouble() : 0.0;
 
-      return FlSpot(date, yValue); // Certificando-se que ambos são doubles
+      return FlSpot(date, yValue);
     }).toList();
 
-    final step = (maxX - minX) /
-        (habits.length - 1); // Calcular o passo com base no número de pontos
+    final step = (maxX - minX) / (habits.length - 1);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -75,15 +67,13 @@ class HabitsLineChart extends StatelessWidget {
                   sideTitles: SideTitles(
                     showTitles: true,
                     reservedSize: 40,
-                    interval:
-                        intervalValues, // Manter o intervalo de valores no eixo Y
+                    interval: intervalValues,
                   ),
                 ),
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
-                    interval:
-                        step, // Definir intervalo de acordo com o número de pontos
+                    interval: step,
                     getTitlesWidget: (value, meta) {
                       final timestamp =
                           Timestamp.fromMillisecondsSinceEpoch(value.toInt());
@@ -107,7 +97,7 @@ class HabitsLineChart extends StatelessWidget {
               ],
               minX: minX,
               maxX: maxX,
-              minY: minY,
+              minY: 0,
               maxY: maxY,
             ),
           ),

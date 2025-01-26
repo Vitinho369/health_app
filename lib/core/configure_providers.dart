@@ -1,4 +1,5 @@
 import 'package:health_app/services/app/health_service.dart';
+import 'package:health_app/services/app/notifications_service.dart';
 import 'package:health_app/services/app/shared_preferences_service.dart';
 import 'package:health_app/services/firebase/auth_service.dart';
 import 'package:health_app/services/app/navigation_bar_service.dart';
@@ -18,6 +19,8 @@ class ConfigureProviders {
     final healthService = HealthService();
     final SharedPreferencesService preferencesService =
         SharedPreferencesService();
+    final NotificationService notificationService = NotificationService();
+    notificationService.scheduleDailyNotifications();
 
     return ConfigureProviders(providers: [
       ChangeNotifierProvider<AuthService>.value(value: authService),
@@ -27,6 +30,7 @@ class ConfigureProviders {
       ChangeNotifierProvider<HealthService>.value(value: healthService),
       ChangeNotifierProvider<SharedPreferencesService>.value(
           value: preferencesService),
+      Provider<NotificationService>.value(value: notificationService),
     ]);
   }
 }

@@ -35,7 +35,6 @@ class _GoogleFitPageState extends State<GoogleFitPage> {
 
   Future<void> _fetchHealthData() async {
     await healthService.fetchData();
-    await healthService.fetchStepData();
   }
 
   @override
@@ -47,14 +46,22 @@ class _GoogleFitPageState extends State<GoogleFitPage> {
                 child: Column(
                   children: [
                     // Título antes do ListView
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 16.0),
-                      child: Text(
-                        'Dados Google Fit',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Dados Google Fit',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          IconButton(
+                              onPressed: _fetchHealthData,
+                              icon: Icon(Icons.refresh)),
+                        ],
                       ),
                     ),
                     Expanded(

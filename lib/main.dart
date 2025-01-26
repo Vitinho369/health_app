@@ -36,7 +36,7 @@ class AppRoot extends StatelessWidget {
       providers: data.providers,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Aula',
+        title: 'Health App',
         theme: theme.light(),
         darkTheme: theme.dark(),
         routes: {

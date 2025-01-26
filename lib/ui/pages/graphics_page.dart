@@ -37,7 +37,9 @@ class GraphicsPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Passando parâmetros genéricos para o gráfico
+                const SizedBox(
+                  height: 50,
+                ),
                 HabitsLineChart(
                   chartTitle: "Quantidade de água por dia",
                   xLabelKey: 'timestamp',

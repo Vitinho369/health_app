@@ -73,6 +73,13 @@ class DataSensor {
       'value': 0,
       'unit': 'kcal'
     },
+    "HealthDataType.SLEEP_SESSION": {
+      'name': 'Horas de sono',
+      'icon': Icons.bed,
+      'description': 'Total de horas de sono',
+      'value': 0,
+      'unit': 'h'
+    },
   };
 
   Map<String, dynamic> getSensorInfo(String sensorType) {
