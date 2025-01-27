@@ -1,61 +1,98 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:health_app/services/app/goal_service.dart';
+import 'package:health_app/ui/widgets/conffit_goal.dart';
 import 'package:health_app/ui/widgets/goal_card.dart';
 import 'package:health_app/ui/widgets/progress_indicator.dart';
+import 'package:health_app/ui/widgets/text_animation.dart';
+import 'package:provider/provider.dart';
 
-class GoalsPage extends StatelessWidget {
+class GoalsPage extends StatefulWidget {
   const GoalsPage({Key? key}) : super(key: key);
 
   @override
+  State<GoalsPage> createState() => _GoalsPageState();
+}
+
+class _GoalsPageState extends State<GoalsPage> with WidgetsBindingObserver {
+  late final ConfettiController _confettiController;
+  late final GoalService goalService;
+
+  @override
+  void initState() {
+    super.initState();
+    _confettiController =
+        ConfettiController(duration: const Duration(seconds: 2));
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.resumed) {
+      final goalService = Provider.of<GoalService>(context, listen: false);
+      goalService.init();
+    }
+  }
+
+  void _triggerConfetti() {
+    _confettiController.play();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final GoalService goalService =
+        Provider.of<GoalService>(context, listen: true);
+
+    goalService.progressDailyComplete = _triggerConfetti;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            GoalCard(title: "Meta de atividade física", progress: 0.9),
-            // // Meta de Atividade Física
-            // Card(
-            //   margin: const EdgeInsets.only(bottom: 16.0),
-            //   elevation: 5,
-            //   child: ListTile(
-            //     title: const Text("Meta de Atividade Física"),
-            //     subtitle: const Text("7 dias consecutivos de exercício"),
-            //     trailing:
-            //         ProgressIndicatorGoal(progress: 0.6), // Progresso da meta
-            //   ),
-            // ),
-            // // Meta de Ingestão de Água
-            // Card(
-            //   margin: const EdgeInsets.only(bottom: 16.0),
-            //   elevation: 5,
-            //   child: ListTile(
-            //     title: const Text("Meta de Ingestão de Água"),
-            //     subtitle: const Text("2 litros por dia"),
-            //     trailing:
-            //         ProgressIndicatorGoal(progress: 0.8), // Progresso da meta
-            //   ),
-            // ),
-            // // Meta de Sono
-            // Card(
-            //   margin: const EdgeInsets.only(bottom: 16.0),
-            //   elevation: 5,
-            //   child: ListTile(
-            //     title: const Text("Meta de Sono"),
-            //     subtitle: const Text("8 horas de sono por noite"),
-            //     trailing:
-            //         ProgressIndicatorGoal(progress: 0.4), // Progresso da meta
-            //   ),
-            // ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Adicionar nova meta
-        },
-        child: const Icon(Icons.add),
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                GoalCard(
+                  title: "Meta de atividade física",
+                  progress: goalService.progressPhisycalAtivity,
+                  description: "Realizar 5 tipos de exercício diferentes",
+                  onPressed: goalService.incrementProgressAtivity,
+                ),
+                GoalCard(
+                  title: "Meta de ingestão de água",
+                  progress: goalService.progressWaterIngest,
+                  description: "2 litros por dia",
+                  onPressed: goalService.incrementProgressWaterIngest,
+                ),
+                GoalCard(
+                  title: "Meta de sono",
+                  progress: goalService.progressSleep,
+                  description: "8 horas de sono por noite",
+                  onPressed: goalService.incrementProgressSleep,
+                ),
+                GoalCard(
+                  title: "Meta de alimentação",
+                  progress: goalService.progressAliementation,
+                  description: "5 refeições saudáveis por dia",
+                  onPressed: goalService.incrementProgressAliementation,
+                ),
+                const SizedBox(height: 30),
+                TextAnimation(textComplete: goalService.textComplete),
+              ],
+            ),
+          ),
+          ConffitGoal(confettiController: _confettiController),
+        ],
       ),
     );
   }

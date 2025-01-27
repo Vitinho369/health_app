@@ -82,6 +82,12 @@ class DataSensor {
     },
   };
 
+  void clearValuesMap() {
+    data_sensor.forEach((key, value) {
+      data_sensor[key]!["value"] = 0;
+    });
+  }
+
   Map<String, dynamic> getSensorInfo(String sensorType) {
     return data_sensor[sensorType] ??
         {

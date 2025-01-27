@@ -1,3 +1,4 @@
+import 'package:health_app/services/app/goal_service.dart';
 import 'package:health_app/services/app/health_service.dart';
 import 'package:health_app/services/app/notifications_service.dart';
 import 'package:health_app/services/app/shared_preferences_service.dart';
@@ -21,6 +22,7 @@ class ConfigureProviders {
         SharedPreferencesService();
     final NotificationService notificationService = NotificationService();
     notificationService.scheduleDailyNotifications();
+    final GoalService goalService = GoalService();
 
     return ConfigureProviders(providers: [
       ChangeNotifierProvider<AuthService>.value(value: authService),
@@ -31,6 +33,7 @@ class ConfigureProviders {
       ChangeNotifierProvider<SharedPreferencesService>.value(
           value: preferencesService),
       Provider<NotificationService>.value(value: notificationService),
+      ChangeNotifierProvider<GoalService>.value(value: goalService),
     ]);
   }
 }

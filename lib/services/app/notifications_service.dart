@@ -24,7 +24,7 @@ class NotificationService {
       'hour': 11,
       'minute': 30,
       'title': 'Alimente-se!',
-      'body': 'Lembre-se de fazer uma alimentação saudável',
+      'body': 'Lembre-se de fazer uma alimentação saudável😋',
     },
     {
       'hour': 14,

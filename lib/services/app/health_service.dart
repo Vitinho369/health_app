@@ -119,7 +119,9 @@ class HealthService extends ChangeNotifier {
   /// Fetch data points from the health plugin and show them in the app.
   Future<void> fetchData() async {
     _state = AppState.FETCHING_DATA;
-    // get data within the last 24 hours
+    // get data within the last 24 hours7
+    dataFecthed = false;
+    notifyListeners();
     final now = DateTime.now();
     final yesterday = now.subtract(const Duration(hours: 24));
     final midnight = DateTime(now.year, now.month, now.day);
@@ -155,7 +157,7 @@ class HealthService extends ChangeNotifier {
     // for (var data in _healthDataList) {
     //   debugPrint(toJsonString(data));
     // }
-
+    dataSensor.clearValuesMap();
     // Process each data point
     totalValues.clear();
     for (var data in _healthDataList) {

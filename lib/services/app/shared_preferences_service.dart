@@ -25,4 +25,21 @@ class SharedPreferencesService extends ChangeNotifier {
     await _sharedPreferences?.setBool('isGoogleHealthInstall', value);
     notifyListeners();
   }
+
+  Future<void> setDateGoalLast(DateTime date) async {
+    await _sharedPreferences?.setString('dateGoal', date.toString());
+    notifyListeners();
+  }
+
+  DateTime getDateGoalLast() {
+    final date = _sharedPreferences?.getString('dateGoal');
+    return date != null ? DateTime.parse(date) : DateTime.now();
+  }
+
+  Future<void> initDateGoal() async {
+    if (_sharedPreferences?.getString('dateGoal') == null) {
+      await _sharedPreferences?.setString(
+          'dateGoal', DateTime.now().toString());
+    }
+  }
 }
