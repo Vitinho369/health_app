@@ -45,64 +45,74 @@ class HabitsLineChart extends StatelessWidget {
       return FlSpot(date, yValue);
     }).toList();
 
-    final step = (maxX - minX) / (habits.length - 1);
+    // final step = (maxX - minX) / (habits.length - 1);
+    final step = (maxX - minX);
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(chartTitle),
-        SizedBox(
-          height: 200,
-          width: 300,
-          child: LineChart(
-            LineChartData(
-              gridData: const FlGridData(show: true),
-              titlesData: FlTitlesData(
-                topTitles:
-                    const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                rightTitles:
-                    const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                leftTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 40,
-                    interval: intervalValues,
+    return Container(
+      margin: const EdgeInsets.only(top: 10, bottom: 10),
+      padding: const EdgeInsets.all(8.0),
+      width: 325,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(chartTitle),
+          SizedBox(
+            height: 200,
+            width: 300,
+            child: LineChart(
+              LineChartData(
+                gridData: const FlGridData(show: true),
+                titlesData: FlTitlesData(
+                  topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 40,
+                      interval: intervalValues,
+                    ),
+                  ),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      interval: step,
+                      getTitlesWidget: (value, meta) {
+                        final timestamp =
+                            Timestamp.fromMillisecondsSinceEpoch(value.toInt());
+                        final date = timestamp.toDate();
+                        return Text(
+                          "${date.day}/${date.month}",
+                          style: const TextStyle(fontSize: 10),
+                        );
+                      },
+                    ),
                   ),
                 ),
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    interval: step,
-                    getTitlesWidget: (value, meta) {
-                      final timestamp =
-                          Timestamp.fromMillisecondsSinceEpoch(value.toInt());
-                      final date = timestamp.toDate();
-                      return Text(
-                        "${date.day}/${date.month}",
-                        style: const TextStyle(fontSize: 10),
-                      );
-                    },
+                borderData: FlBorderData(show: true),
+                lineBarsData: [
+                  LineChartBarData(
+                    spots: lineData,
+                    isCurved: false,
+                    color: Colors.blue,
+                    dotData: const FlDotData(show: true),
                   ),
-                ),
+                ],
+                minX: minX,
+                maxX: maxX,
+                minY: 0,
+                maxY: maxY,
               ),
-              borderData: FlBorderData(show: true),
-              lineBarsData: [
-                LineChartBarData(
-                  spots: lineData,
-                  isCurved: false,
-                  color: Colors.blue,
-                  dotData: const FlDotData(show: true),
-                ),
-              ],
-              minX: minX,
-              maxX: maxX,
-              minY: 0,
-              maxY: maxY,
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

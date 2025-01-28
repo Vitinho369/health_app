@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:health_app/services/app/goal_service.dart';
 import 'package:health_app/ui/widgets/conffit_goal.dart';
 import 'package:health_app/ui/widgets/goal_card.dart';
-import 'package:health_app/ui/widgets/progress_indicator.dart';
 import 'package:health_app/ui/widgets/text_animation.dart';
 import 'package:provider/provider.dart';
 
@@ -52,6 +51,7 @@ class _GoalsPageState extends State<GoalsPage> with WidgetsBindingObserver {
     final GoalService goalService =
         Provider.of<GoalService>(context, listen: true);
 
+    goalService.init();
     goalService.progressDailyComplete = _triggerConfetti;
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
@@ -64,30 +64,30 @@ class _GoalsPageState extends State<GoalsPage> with WidgetsBindingObserver {
               children: [
                 GoalCard(
                   title: "Meta de atividade física",
-                  progress: goalService.progressPhisycalAtivity,
+                  progress: goalService.user!.progressPhisycalAtivity,
                   description: "Realizar 5 tipos de exercício diferentes",
                   onPressed: goalService.incrementProgressAtivity,
                 ),
                 GoalCard(
                   title: "Meta de ingestão de água",
-                  progress: goalService.progressWaterIngest,
+                  progress: goalService.user!.progressWaterIngest,
                   description: "2 litros por dia",
                   onPressed: goalService.incrementProgressWaterIngest,
                 ),
                 GoalCard(
                   title: "Meta de sono",
-                  progress: goalService.progressSleep,
+                  progress: goalService.user!.progressSleep,
                   description: "8 horas de sono por noite",
                   onPressed: goalService.incrementProgressSleep,
                 ),
                 GoalCard(
                   title: "Meta de alimentação",
-                  progress: goalService.progressAliementation,
+                  progress: goalService.user!.progressAliementation,
                   description: "5 refeições saudáveis por dia",
                   onPressed: goalService.incrementProgressAliementation,
                 ),
                 const SizedBox(height: 30),
-                TextAnimation(textComplete: goalService.textComplete),
+                TextAnimation(textComplete: goalService.user!.textComplete),
               ],
             ),
           ),

@@ -10,23 +10,27 @@ class UserProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text("Olá ${authService.getCurrentUserEmail()}"),
-              ElevatedButton(
-                onPressed: () => {authService.signOut()},
-                child: Icon(Icons.logout_rounded),
-              )
-            ],
-          ),
-          Icon(Icons.monitor_heart_outlined,
-              size: 90, color: Theme.of(context).colorScheme.primary),
-          FormUserProfile(),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Icon(Icons.monitor_heart_outlined,
+                    size: 90, color: Theme.of(context).colorScheme.primary),
+                Text(
+                  "Olá ${authService.getCurrentUserEmail()}",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+            FormUserProfile(),
+          ],
+        ),
       ),
     );
   }

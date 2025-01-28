@@ -134,7 +134,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 labelText: "Confirmar Senha",
                 controller: rePasswordController,
               ),
-              if (!authService.register_sucess)
+              if (!authService.loginSucess)
                 Text(
                   "Erro ao cadastrar",
                   style: TextStyle(color: Colors.red),

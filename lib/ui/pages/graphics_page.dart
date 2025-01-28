@@ -37,16 +37,14 @@ class GraphicsPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(
-                  height: 50,
-                ),
-                HabitsLineChart(
-                  chartTitle: "Quantidade de água por dia",
-                  xLabelKey: 'timestamp',
-                  yLabelKey: 'water',
-                  habits: habits,
-                  intervalValues: 100,
-                ),
+                if (habits.length > 1)
+                  HabitsLineChart(
+                    chartTitle: "Quantidade de água por dia",
+                    xLabelKey: 'timestamp',
+                    yLabelKey: 'water',
+                    habits: habits,
+                    intervalValues: 100,
+                  ),
                 HabitsBarChart(
                   chartTitle: "Horas de exercício",
                   yLabelKey: "timeExercise",
@@ -54,13 +52,22 @@ class GraphicsPage extends StatelessWidget {
                   habits: habits,
                   interval: 20,
                 ),
-                HabitsLineChart(
-                  chartTitle: "Duração do Sono",
-                  xLabelKey: 'timestamp',
-                  yLabelKey: 'sleep',
-                  habits: habits,
-                  intervalValues: 5,
-                ),
+                if (habits.length > 1)
+                  HabitsLineChart(
+                    chartTitle: "Duração do Sono",
+                    xLabelKey: 'timestamp',
+                    yLabelKey: 'sleep',
+                    habits: habits,
+                    intervalValues: 5,
+                  ),
+                if (habits.length > 1)
+                  HabitsLineChart(
+                    chartTitle: "Peso",
+                    xLabelKey: 'timestamp',
+                    yLabelKey: 'weigth',
+                    habits: habits,
+                    intervalValues: 5,
+                  ),
               ],
             ),
           ),

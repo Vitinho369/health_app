@@ -57,8 +57,8 @@ class _LoginPageState extends State<LoginPage> {
               height: 100,
               onClick: () => signIn(authService),
             ),
-            if (!authService.login_sucess)
-              Text(
+            if (!authService.loginSucess)
+              const Text(
                 "Usuário ou senha inválidos",
                 style: TextStyle(color: Colors.red),
               ),

@@ -1,24 +1,58 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:health_app/model/user_profile_data.dart';
+import 'package:health_app/services/app/shared_preferences_service.dart';
+import 'package:health_app/services/firebase/firestore_service.dart';
 
 class AuthService extends ChangeNotifier {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
-  bool login_sucess = true;
-  bool register_sucess = true;
+  SharedPreferencesService _sharedPreferencesService =
+      SharedPreferencesService();
+  final CloudFiretoreService firetoreService = CloudFiretoreService();
 
-  Future<UserCredential> signInWithEmailAndPassword(
+  bool loginSucess = true;
+  bool permissionLogin = false;
+  bool registerSucess = true;
+
+  Future<UserCredential?> signInWithEmailAndPassword(
       String email, String password) async {
     try {
       UserCredential credential = await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
 
-      login_sucess = true;
+      _sharedPreferencesService.setUserSession(email, password);
+      List<String> userSession =
+          _sharedPreferencesService.getUserSession()!.split("_");
+      if (userSession[0] == email && userSession[1] == password) {
+        UserProfileData user = _sharedPreferencesService.getUser();
+        user.email = email;
+        print("usuário login: ${user.toJson()}");
+        _sharedPreferencesService.setUser(user);
+        firetoreService.syncSharedBanck(user);
+      }
+      loginSucess = true;
+      permissionLogin = true;
       notifyListeners();
       return credential;
     } on FirebaseAuthException catch (e) {
-      login_sucess = false;
+      // if (_sharedPreferencesService.getUserSession() != null) {
+      //   List<String> user =
+      //       _sharedPreferencesService.getUserSession()!.split("_");
+
+      //   if (email == user[0] && password == user[1]) {
+      //     permissionLogin = true;
+      //     _sharedPreferencesService.setUserSession(email, password);
+
+      //     UserProfileData user = _sharedPreferencesService.getUser();
+      //     user.email = email;
+
+      //     _sharedPreferencesService.setUser(user);
+      //     notifyListeners();
+      //     return null;
+      //   }
+      // }
+      permissionLogin = false;
+      loginSucess = false;
       notifyListeners();
       throw Exception(e.message);
     }
@@ -30,11 +64,11 @@ class AuthService extends ChangeNotifier {
       UserCredential credential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
 
-      register_sucess = true;
+      registerSucess = true;
       notifyListeners();
       return credential;
     } on FirebaseAuthException catch (e) {
-      register_sucess = false;
+      registerSucess = false;
       notifyListeners();
       throw Exception(e.message);
     }
@@ -49,7 +83,9 @@ class AuthService extends ChangeNotifier {
   }
 
   Future<void> signOut() async {
-    return await _firebaseAuth.signOut();
+    await _firebaseAuth.signOut();
+    permissionLogin = false;
+    notifyListeners();
   }
 
   String? getCurrentUserEmail() {

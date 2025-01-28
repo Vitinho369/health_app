@@ -6,6 +6,7 @@ import 'package:health_app/ui/pages/goals_page.dart';
 import 'package:health_app/ui/pages/google_fit_page.dart';
 import 'package:health_app/ui/pages/graphics_page.dart';
 import 'package:health_app/ui/pages/habits_page.dart';
+import 'package:health_app/ui/pages/user_profile_page.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -47,6 +48,10 @@ class HomePage extends StatelessWidget {
             icon: Icon(Icons.favorite),
             label: 'Google Fit',
           ),
+          NavigationDestination(
+            icon: Icon(Icons.person),
+            label: 'Perfil',
+          ),
         ],
       ),
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
@@ -57,6 +62,9 @@ class HomePage extends StatelessWidget {
         const HabitsPage(),
         // UserProfile(authService: authService),
         GoogleFitPage(),
+        UserProfile(
+          authService: authService,
+        ),
       ][navigationService.selectedIndex],
     );
   }

@@ -45,64 +45,74 @@ class HabitsBarChart extends StatelessWidget {
       );
     }).toList();
 
-    return Column(
-      children: [
-        Text(chartTitle),
-        SizedBox(
-          height: 200,
-          width: 300,
-          child: BarChart(
-            BarChartData(
-              maxY: maxY > 0 ? maxY + 1 : 1, // Ajusta o valor máximo no eixo Y
-              barGroups: barData,
-              gridData: FlGridData(show: true), // Exibe as linhas de grade
-              titlesData: FlTitlesData(
-                leftTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 40,
-                    interval: interval,
-                    getTitlesWidget: (value, meta) {
-                      return Text(
-                        "${value.toInt()}",
-                        style: const TextStyle(fontSize: 12),
-                      );
-                    },
-                  ),
-                ),
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 40,
-                    getTitlesWidget: (value, meta) {
-                      if (value.toDouble() < habits.length) {
-                        final label = habits[value.toInt()][xLabelKey] ?? '';
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text(
-                            label,
-                            style: const TextStyle(fontSize: 12),
-                          ),
+    return Container(
+      margin: const EdgeInsets.only(top: 10, bottom: 10),
+      padding: const EdgeInsets.all(8.0),
+      width: 325,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          Text(chartTitle),
+          SizedBox(
+            height: 200,
+            width: 300,
+            child: BarChart(
+              BarChartData(
+                maxY:
+                    maxY > 0 ? maxY + 1 : 1, // Ajusta o valor máximo no eixo Y
+                barGroups: barData,
+                gridData: FlGridData(show: true), // Exibe as linhas de grade
+                titlesData: FlTitlesData(
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 40,
+                      interval: interval,
+                      getTitlesWidget: (value, meta) {
+                        return Text(
+                          "${value.toInt()}",
+                          style: const TextStyle(fontSize: 12),
                         );
-                      }
-                      return const SizedBox.shrink();
-                    },
+                      },
+                    ),
+                  ),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 40,
+                      getTitlesWidget: (value, meta) {
+                        if (value.toDouble() < habits.length) {
+                          final label = habits[value.toInt()][xLabelKey] ?? '';
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              label,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    ),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
                   ),
                 ),
-                topTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                rightTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
+                borderData: FlBorderData(show: true),
+                alignment: BarChartAlignment
+                    .spaceEvenly, // Espaçamento entre as barras
               ),
-              borderData: FlBorderData(show: true),
-              alignment:
-                  BarChartAlignment.spaceEvenly, // Espaçamento entre as barras
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
